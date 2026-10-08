@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -11,8 +14,12 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
+
   late final Animation<double> _fadeAnimation;
+
   late final Animation<double> _scaleAnimation;
+
+  Timer? _navigationTimer;
 
   @override
   void initState() {
@@ -39,10 +46,25 @@ class _SplashScreenState extends State<SplashScreen>
     );
 
     _controller.forward();
+
+    // Temporary MVP navigation:
+    // After showing the brand for a short time,
+    // continue to onboarding.
+    _navigationTimer = Timer(
+      const Duration(milliseconds: 2200),
+      () {
+        if (!mounted) {
+          return;
+        }
+
+        context.go('/onboarding');
+      },
+    );
   }
 
   @override
   void dispose() {
+    _navigationTimer?.cancel();
     _controller.dispose();
     super.dispose();
   }
@@ -91,9 +113,7 @@ class _SplashScreenState extends State<SplashScreen>
                         letterSpacing: -1.2,
                       ),
                     ),
-
                     const SizedBox(height: 10),
-
                     Text(
                       'Find Your Person',
                       style: GoogleFonts.poppins(
@@ -120,7 +140,8 @@ class _SplashScreenState extends State<SplashScreen>
                 height: 28,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  valueColor: const AlwaysStoppedAnimation<Color>(
+                  valueColor:
+                      const AlwaysStoppedAnimation<Color>(
                     Color(0xFFFF4D8D),
                   ),
                   backgroundColor: Colors.white12,
@@ -141,6 +162,7 @@ class _GlowCircle extends StatelessWidget {
   });
 
   final double size;
+
   final Color color;
 
   @override
