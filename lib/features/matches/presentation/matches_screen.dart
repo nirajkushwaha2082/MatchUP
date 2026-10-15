@@ -41,6 +41,7 @@ class MatchesScreen extends StatelessWidget {
       unreadCount: 0,
       isOnline: false,
       imageUrl: 'https://i.pravatar.cc/300?img=8',
+      isNew: true,
     ),
   ];
 
@@ -219,53 +220,96 @@ class MatchesScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                children: [
-                  _SegmentChip(
-                    label: 'New',
-                    isSelected: true,
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Showing your matches.')),
-                      );
-                    },
-                  ),
-                  const SizedBox(width: 10),
-                  _SegmentChip(
-                    label: 'Messages',
-                    isSelected: false,
-                    onTap: () {
-                      context.push('/chat');
-                    },
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 18),
             Expanded(
-              child: ListView.separated(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
-                itemCount: _matches.length,
-                separatorBuilder: (context, index) {
-                  return const SizedBox(height: 12);
-                },
-                itemBuilder: (context, index) {
-                  final match = _matches[index];
-
-                  return _MatchCard(
-                    match: match,
-                    onTap: () => _openChat(context, match),
-                    onMessage: () => _openChat(context, match),
-                    onMore: () => _showMatchOptions(context, match),
-                  );
-                },
+              child: _MatchesTabbedList(
+                matches: _matches,
+                onOpenChat: (match) => _openChat(context, match),
+                onMore: (match) => _showMatchOptions(context, match),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _MatchesTabbedList extends StatefulWidget {
+  const _MatchesTabbedList({
+    required this.matches,
+    required this.onOpenChat,
+    required this.onMore,
+  });
+
+  final List<_MatchItem> matches;
+  final ValueChanged<_MatchItem> onOpenChat;
+  final ValueChanged<_MatchItem> onMore;
+
+  @override
+  State<_MatchesTabbedList> createState() => _MatchesTabbedListState();
+}
+
+class _MatchesTabbedListState extends State<_MatchesTabbedList> {
+  int _selectedTab = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    final visibleMatches = widget.matches
+        .where((match) => _selectedTab == 0 ? match.isNew : !match.isNew)
+        .toList();
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            children: [
+              _SegmentChip(
+                label: 'New',
+                isSelected: _selectedTab == 0,
+                onTap: () => setState(() => _selectedTab = 0),
+              ),
+              const SizedBox(width: 10),
+              _SegmentChip(
+                label: 'Messages',
+                isSelected: _selectedTab == 1,
+                onTap: () => setState(() => _selectedTab = 1),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 18),
+        Expanded(
+          child: visibleMatches.isEmpty
+              ? Center(
+                  child: Text(
+                    _selectedTab == 0
+                        ? 'No new matches yet'
+                        : 'No conversations yet',
+                    style: GoogleFonts.poppins(
+                      color: Colors.white54,
+                      fontSize: 13,
+                    ),
+                  ),
+                )
+              : ListView.separated(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                  itemCount: visibleMatches.length,
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 12),
+                  itemBuilder: (context, index) {
+                    final match = visibleMatches[index];
+
+                    return _MatchCard(
+                      match: match,
+                      onTap: () => widget.onOpenChat(match),
+                      onMessage: () => widget.onOpenChat(match),
+                      onMore: () => widget.onMore(match),
+                    );
+                  },
+                ),
+        ),
+      ],
     );
   }
 }
@@ -527,6 +571,7 @@ class _MatchItem {
     required this.unreadCount,
     required this.isOnline,
     required this.imageUrl,
+    this.isNew = false,
   });
 
   final String name;
@@ -536,6 +581,7 @@ class _MatchItem {
   final int unreadCount;
   final bool isOnline;
   final String imageUrl;
+  final bool isNew;
 }
 
 class _SegmentChip extends StatelessWidget {
