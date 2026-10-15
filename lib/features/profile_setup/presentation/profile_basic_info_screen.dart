@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../data/profile_draft.dart';
+
 class ProfileBasicInfoScreen extends StatefulWidget {
   const ProfileBasicInfoScreen({super.key});
 
@@ -32,6 +34,18 @@ class _ProfileBasicInfoScreenState
     'Women',
     'Everyone',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController.text = ProfileDraft.name;
+    _cityController.text = ProfileDraft.city;
+    _dateOfBirth = ProfileDraft.dateOfBirth;
+    _gender = ProfileDraft.gender.isEmpty ? null : ProfileDraft.gender;
+    _datingPreference = ProfileDraft.datingPreference.isEmpty
+        ? null
+        : ProfileDraft.datingPreference;
+  }
 
   @override
   void dispose() {
@@ -135,6 +149,12 @@ class _ProfileBasicInfoScreenState
       _showMessage('Please select who you are interested in.');
       return;
     }
+
+    ProfileDraft.name = _nameController.text.trim();
+    ProfileDraft.city = _cityController.text.trim();
+    ProfileDraft.dateOfBirth = _dateOfBirth;
+    ProfileDraft.gender = _gender!;
+    ProfileDraft.datingPreference = _datingPreference!;
 
     context.push('/profile-bio');
   }
