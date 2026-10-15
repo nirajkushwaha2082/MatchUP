@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../profile_setup/data/profile_draft.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -45,6 +47,10 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         _isLoading = false;
       });
+      // Demo-only routing until Firebase Authentication is connected.
+      context.go(ProfileDraft.missingRequiredFields.isEmpty
+          ? '/discover'
+          : '/profile-setup');
     });
   }
 

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../data/profile_draft.dart';
+
 class ProfileInterestsScreen extends StatefulWidget {
   const ProfileInterestsScreen({super.key});
 
@@ -47,7 +49,7 @@ class _ProfileInterestsScreenState
     'Meditation',
   ];
 
-  final Set<String> _selectedInterests = {};
+  final Set<String> _selectedInterests = {...ProfileDraft.interests};
 
   @override
   void initState() {
@@ -103,7 +105,10 @@ class _ProfileInterestsScreenState
       return;
     }
 
-    context.go('/discover');
+    ProfileDraft.interests
+      ..clear()
+      ..addAll(_selectedInterests);
+    context.push('/profile-dating-preferences');
   }
 
   void _showMessage(String message) {

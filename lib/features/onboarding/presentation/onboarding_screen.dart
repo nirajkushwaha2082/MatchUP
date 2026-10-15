@@ -1,3 +1,4 @@
+import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -40,16 +41,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     super.dispose();
   }
 
-  void _nextPage() {
-    if (_currentPage < _pages.length - 1) {
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 350),
-        curve: Curves.easeOut,
-      );
-    } else {
-      // Final navigation will be connected later.
-    }
+   void _nextPage() {
+  if (_currentPage < _pages.length - 1) {
+    _pageController.nextPage(
+      duration: const Duration(milliseconds: 350),
+      curve: Curves.easeOut,
+    );
+  } else {
+    context.go('/login');
   }
+}
 
   @override
   Widget build(BuildContext context) {

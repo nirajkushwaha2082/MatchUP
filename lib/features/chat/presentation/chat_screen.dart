@@ -10,11 +10,9 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final TextEditingController _messageController =
-      TextEditingController();
+  final TextEditingController _messageController = TextEditingController();
 
-  final ScrollController _scrollController =
-      ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   final List<_ChatMessage> _messages = [
     const _ChatMessage(
@@ -110,17 +108,10 @@ class _ChatScreenState extends State<ChatScreen> {
     }
 
     setState(() {
-      _messages.add(
-        _ChatMessage(
-          text: text,
-          isMe: true,
-          time: _currentTime(),
-        ),
-      );
+      _messages.add(_ChatMessage(text: text, isMe: true, time: _currentTime()));
     });
 
     _messageController.clear();
-
     _scrollToBottom();
   }
 
@@ -130,8 +121,8 @@ class _ChatScreenState extends State<ChatScreen> {
     final hour = now.hour == 0
         ? 12
         : now.hour > 12
-            ? now.hour - 12
-            : now.hour;
+        ? now.hour - 12
+        : now.hour;
 
     final minute = now.minute.toString().padLeft(2, '0');
     final period = now.hour >= 12 ? 'PM' : 'AM';
@@ -161,19 +152,12 @@ class _ChatScreenState extends State<ChatScreen> {
       backgroundColor: const Color(0xFF15111B),
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(26),
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(26)),
       ),
       builder: (context) {
         return SafeArea(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(
-              16,
-              16,
-              16,
-              16,
-            ),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -212,16 +196,14 @@ class _ChatScreenState extends State<ChatScreen> {
                 SizedBox(
                   height: 270,
                   child: GridView.builder(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 8,
-                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 8),
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 7,
-                      crossAxisSpacing: 6,
-                      mainAxisSpacing: 6,
-                      childAspectRatio: 1,
-                    ),
+                          crossAxisCount: 7,
+                          crossAxisSpacing: 6,
+                          mainAxisSpacing: 6,
+                          childAspectRatio: 1,
+                        ),
                     itemCount: _emojis.length,
                     itemBuilder: (context, index) {
                       final emoji = _emojis[index];
@@ -235,16 +217,12 @@ class _ChatScreenState extends State<ChatScreen> {
                         child: Container(
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(
-                              alpha: 0.04,
-                            ),
+                            color: Colors.white.withValues(alpha: 0.04),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
                             emoji,
-                            style: const TextStyle(
-                              fontSize: 25,
-                            ),
+                            style: const TextStyle(fontSize: 25),
                           ),
                         ),
                       );
@@ -271,19 +249,13 @@ class _ChatScreenState extends State<ChatScreen> {
       end = text.length;
     }
 
-    final newText = text.replaceRange(
-      start,
-      end,
-      emoji,
-    );
+    final newText = text.replaceRange(start, end, emoji);
 
     final newCursorPosition = start + emoji.length;
 
     _messageController.value = TextEditingValue(
       text: newText,
-      selection: TextSelection.collapsed(
-        offset: newCursorPosition,
-      ),
+      selection: TextSelection.collapsed(offset: newCursorPosition),
     );
 
     setState(() {});
@@ -294,19 +266,12 @@ class _ChatScreenState extends State<ChatScreen> {
       context: context,
       backgroundColor: const Color(0xFF15111B),
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(26),
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(26)),
       ),
       builder: (context) {
         return SafeArea(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(
-              20,
-              18,
-              20,
-              20,
-            ),
+            padding: const EdgeInsets.fromLTRB(20, 18, 20, 20),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -357,6 +322,14 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  void _handleBack() {
+    if (context.canPop()) {
+      context.pop();
+    } else {
+      context.go('/matches');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -365,11 +338,9 @@ class _ChatScreenState extends State<ChatScreen> {
         backgroundColor: const Color(0xFF09070D),
         elevation: 0,
         leading: IconButton(
-          onPressed: () => context.pop(),
-          icon: const Icon(
-            Icons.arrow_back_rounded,
-            color: Colors.white,
-          ),
+          onPressed: _handleBack,
+          tooltip: 'Back',
+          icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
         ),
         titleSpacing: 0,
         title: Row(
@@ -380,10 +351,7 @@ class _ChatScreenState extends State<ChatScreen> {
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: LinearGradient(
-                  colors: [
-                    Color(0xFF6C3FC8),
-                    Color(0xFFFF4D8D),
-                  ],
+                  colors: [Color(0xFF6C3FC8), Color(0xFFFF4D8D)],
                 ),
               ),
               alignment: Alignment.center,
@@ -436,10 +404,7 @@ class _ChatScreenState extends State<ChatScreen> {
           IconButton(
             onPressed: _showMoreOptions,
             tooltip: 'More',
-            icon: const Icon(
-              Icons.more_vert_rounded,
-              color: Colors.white,
-            ),
+            icon: const Icon(Icons.more_vert_rounded, color: Colors.white),
           ),
         ],
       ),
@@ -448,36 +413,21 @@ class _ChatScreenState extends State<ChatScreen> {
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
-              padding: const EdgeInsets.fromLTRB(
-                16,
-                18,
-                16,
-                18,
-              ),
+              padding: const EdgeInsets.fromLTRB(16, 18, 16, 18),
               itemCount: _messages.length,
               itemBuilder: (context, index) {
-                return _MessageBubble(
-                  message: _messages[index],
-                );
+                return _MessageBubble(message: _messages[index]);
               },
             ),
           ),
-
           SafeArea(
             top: false,
             child: Container(
-              padding: const EdgeInsets.fromLTRB(
-                10,
-                10,
-                10,
-                12,
-              ),
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 12),
               decoration: BoxDecoration(
                 color: const Color(0xFF0F0C14),
                 border: Border(
-                  top: BorderSide(
-                    color: Colors.white.withValues(alpha: 0.06),
-                  ),
+                  top: BorderSide(color: Colors.white.withValues(alpha: 0.06)),
                 ),
               ),
               child: Row(
@@ -491,9 +441,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.white.withValues(alpha: 0.05),
-                        border: Border.all(
-                          color: Colors.white10,
-                        ),
+                        border: Border.all(color: Colors.white10),
                       ),
                       child: const Icon(
                         Icons.emoji_emotions_outlined,
@@ -508,8 +456,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       controller: _messageController,
                       minLines: 1,
                       maxLines: 4,
-                      textCapitalization:
-                          TextCapitalization.sentences,
+                      textCapitalization: TextCapitalization.sentences,
                       keyboardType: TextInputType.multiline,
                       style: GoogleFonts.poppins(
                         color: Colors.white,
@@ -522,14 +469,12 @@ class _ChatScreenState extends State<ChatScreen> {
                           fontSize: 13,
                         ),
                         filled: true,
-                        fillColor:
-                            Colors.white.withValues(alpha: 0.05),
+                        fillColor: Colors.white.withValues(alpha: 0.05),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(22),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding:
-                            const EdgeInsets.symmetric(
+                        contentPadding: const EdgeInsets.symmetric(
                           horizontal: 16,
                           vertical: 11,
                         ),
@@ -564,31 +509,18 @@ class _ChatScreenState extends State<ChatScreen> {
 }
 
 class _MessageBubble extends StatelessWidget {
-  const _MessageBubble({
-    required this.message,
-  });
+  const _MessageBubble({required this.message});
 
   final _ChatMessage message;
 
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: message.isMe
-          ? Alignment.centerRight
-          : Alignment.centerLeft,
+      alignment: message.isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
-        constraints: const BoxConstraints(
-          maxWidth: 320,
-        ),
-        margin: const EdgeInsets.only(
-          bottom: 12,
-        ),
-        padding: const EdgeInsets.fromLTRB(
-          14,
-          10,
-          14,
-          8,
-        ),
+        constraints: const BoxConstraints(maxWidth: 320),
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.fromLTRB(14, 10, 14, 8),
         decoration: BoxDecoration(
           color: message.isMe
               ? const Color(0xFF6C3FC8)
@@ -596,12 +528,8 @@ class _MessageBubble extends StatelessWidget {
           borderRadius: BorderRadius.only(
             topLeft: const Radius.circular(18),
             topRight: const Radius.circular(18),
-            bottomLeft: Radius.circular(
-              message.isMe ? 18 : 5,
-            ),
-            bottomRight: Radius.circular(
-              message.isMe ? 5 : 18,
-            ),
+            bottomLeft: Radius.circular(message.isMe ? 18 : 5),
+            bottomRight: Radius.circular(message.isMe ? 5 : 18),
           ),
           border: Border.all(
             color: message.isMe
@@ -625,10 +553,7 @@ class _MessageBubble extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               message.time,
-              style: GoogleFonts.poppins(
-                fontSize: 9.5,
-                color: Colors.white54,
-              ),
+              style: GoogleFonts.poppins(fontSize: 9.5, color: Colors.white54),
             ),
           ],
         ),
@@ -652,19 +577,12 @@ class _MenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = isDestructive
-        ? const Color(0xFFFF4D8D)
-        : Colors.white;
+    final color = isDestructive ? const Color(0xFFFF4D8D) : Colors.white;
 
     return ListTile(
       onTap: onTap,
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: 4,
-      ),
-      leading: Icon(
-        icon,
-        color: color,
-      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+      leading: Icon(icon, color: color),
       title: Text(
         title,
         style: GoogleFonts.poppins(
