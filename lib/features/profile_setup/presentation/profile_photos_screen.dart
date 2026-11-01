@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../data/profile_draft.dart';
+
 class ProfilePhotosScreen extends StatefulWidget {
   const ProfilePhotosScreen({super.key});
 
@@ -17,7 +19,7 @@ class _ProfilePhotosScreenState extends State<ProfilePhotosScreen> {
 
   final ImagePicker _picker = ImagePicker();
 
-  final List<Uint8List> _photos = [];
+  final List<Uint8List> _photos = ProfileDraft.photos;
 
   Future<void> _pickPhoto() async {
     if (_photos.length >= _maxPhotos) {

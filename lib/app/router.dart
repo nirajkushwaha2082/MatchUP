@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import 'main_navigation_shell.dart';
 import '../features/auth/presentation/forgot_password_screen.dart';
 import '../features/auth/presentation/login_screen.dart';
 import '../features/auth/presentation/signup_screen.dart';
 import '../features/chat/presentation/chat_screen.dart';
 import '../features/discover/presentation/discover_screen.dart';
+import '../features/discover/presentation/profile_detail_screen.dart';
 import '../features/matches/presentation/likes_screen.dart';
 import '../features/matches/presentation/match_screen.dart';
 import '../features/matches/presentation/matches_screen.dart';
@@ -14,6 +15,11 @@ import '../features/profile_setup/presentation/profile_basic_info_screen.dart';
 import '../features/profile_setup/presentation/profile_bio_screen.dart';
 import '../features/profile_setup/presentation/profile_interests_screen.dart';
 import '../features/profile_setup/presentation/profile_photos_screen.dart';
+import '../features/profile_setup/presentation/dating_preferences_screen.dart';
+import '../features/profile_setup/presentation/profile_preview_screen.dart';
+import '../features/profile/presentation/profile_screen.dart';
+import '../features/safety/presentation/safety_center_screen.dart';
+import '../features/settings/presentation/settings_screen.dart';
 import '../features/splash/presentation/splash_screen.dart';
 
 final GoRouter appRouter = GoRouter(
@@ -63,18 +69,51 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const ProfileInterestsScreen(),
     ),
 
-    // Main app
     GoRoute(
-      path: '/discover',
-      builder: (context, state) => const DiscoverScreen(),
+      path: '/profile-dating-preferences',
+      builder: (context, state) => const DatingPreferencesScreen(),
     ),
     GoRoute(
-      path: '/matches',
-      builder: (context, state) => const MatchesScreen(),
+      path: '/profile-preview',
+      builder: (context, state) => const ProfilePreviewScreen(),
     ),
     GoRoute(
-      path: '/likes',
-      builder: (context, state) => const LikesScreen(),
+      path: '/profile-details',
+      builder: (context, state) => ProfileDetailScreen(
+        profile: state.uri.queryParameters,
+      ),
+    ),
+
+    // Authenticated areas keep their branch state while switching tabs.
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) =>
+          MainNavigationShell(navigationShell: navigationShell),
+      branches: [
+        StatefulShellBranch(routes: [
+          GoRoute(
+            path: '/discover',
+            builder: (context, state) => const DiscoverScreen(),
+          ),
+        ]),
+        StatefulShellBranch(routes: [
+          GoRoute(
+            path: '/matches',
+            builder: (context, state) => const MatchesScreen(),
+          ),
+        ]),
+        StatefulShellBranch(routes: [
+          GoRoute(
+            path: '/likes',
+            builder: (context, state) => const LikesScreen(),
+          ),
+        ]),
+        StatefulShellBranch(routes: [
+          GoRoute(
+            path: '/profile',
+            builder: (context, state) => const ProfileScreen(),
+          ),
+        ]),
+      ],
     ),
 
     // Match result
@@ -89,37 +128,15 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const ChatScreen(),
     ),
 
-    // Settings
     GoRoute(
       path: '/settings',
-      builder: (context, state) => const _PlaceholderScreen(
-        title: 'Settings',
+      builder: (context, state) => const SettingsScreen(),
+    ),
+    GoRoute(
+      path: '/safety',
+      builder: (context, state) => SafetyCenterScreen(
+        profileName: state.uri.queryParameters['profile'],
       ),
     ),
   ],
 );
-
-class _PlaceholderScreen extends StatelessWidget {
-  const _PlaceholderScreen({
-    required this.title,
-  });
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF09070D),
-      body: Center(
-        child: Text(
-          title,
-          style: const TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-      ),
-    );
-  }
-}

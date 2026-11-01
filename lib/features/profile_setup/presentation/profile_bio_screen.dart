@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../data/profile_draft.dart';
+
 class ProfileBioScreen extends StatefulWidget {
   const ProfileBioScreen({super.key});
 
@@ -17,6 +19,7 @@ class _ProfileBioScreenState extends State<ProfileBioScreen> {
   @override
   void initState() {
     super.initState();
+    _bioController.text = ProfileDraft.bio;
 
     _bioController.addListener(() {
       setState(() {});
@@ -41,6 +44,8 @@ class _ProfileBioScreenState extends State<ProfileBioScreen> {
       _showMessage('Your bio cannot exceed 500 characters.');
       return;
     }
+
+    ProfileDraft.bio = bio;
 
     context.push('/profile-interests');
   }
